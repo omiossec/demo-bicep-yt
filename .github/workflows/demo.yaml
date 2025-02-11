@@ -33,35 +33,3 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az bicep lint --file ./bicep/main.bicep
-
-      - name: Bicep What-If 
-        uses: Azure/cli@v2 
-        with: 
-          azcliversion: latest
-          inlineScript: | 
-            az deployment group create --what-if --name whatif --template-file ./bicep/main.bicep --resource-group ${{ vars.RESOURCE_GROUP }}
-
-  Bicep-deploy:
-    name: run azure deploy
-    runs-on: ubuntu-latest
-    environment: deploy
-    needs: Bicep-whatif
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: login to Azure 
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.CLIENT_ID }}
-          tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
-
-      - name: Bicep deploy
-        uses: Azure/cli@v2 
-        with: 
-          azcliversion: latest
-          inlineScript: | 
-            az deployment group create --name deploy --template-file ./bicep/main.bicep --resource-group ${{ vars.RESOURCE_GROUP }}

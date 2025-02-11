@@ -33,3 +33,10 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az bicep lint --file ./bicep/main.bicep
+
+      - name: Bicep What-If 
+        uses: Azure/cli@v2 
+        with: 
+          azcliversion: latest
+          inlineScript: | 
+            az deployment group create --what-if --name whatif --template-file ./bicep/main.bicep --resource-group ${{ vars.RESOURCE_GROUP }}
